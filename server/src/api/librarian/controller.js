@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const mailer = require('../../utils/Mailer');
 
 const issueBook = async (req, res, next) => {
     try {
@@ -60,6 +61,8 @@ const issueBook = async (req, res, next) => {
                 return [updatedBook, issuedBook];
             });
 
+            await mailer.sendBookIssuedEmail(email, book.title, issuedBook.issuedAt, issuedBook.dueDate);
+
             res.status(201).json({
                 issuedBook,
                 message: "Book issued successfully"
@@ -71,7 +74,6 @@ const issueBook = async (req, res, next) => {
         return next({ path: '/librarian/issue', statusCode: 500, message: error.message, extraData: error });
     }
 }
-
 
 const returnBook = async (req, res, next) => {
     try {
@@ -120,6 +122,8 @@ const returnBook = async (req, res, next) => {
                     data: { current_quantity: { increment: 1 } }
                 });
             });
+
+            await mailer.sendBookReturnedEmail(issuedBook.user.email, issuedBook.book.title, issuedBook.issuedAt, issuedBook.dueDate, today, fine);
 
             res.status(200).json({
                 issuedBook,

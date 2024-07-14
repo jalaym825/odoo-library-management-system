@@ -1,7 +1,7 @@
 const logger = require('../../utils/Logger');
 const prisma = require('../../utils/PrismaClient');
 const { getBookByISBN, generateRandomPassword, hashPassword } = require('../../utils/Helper');
-const crypto = require('crypto');
+const mailer = require('../../utils/Mailer');
 
 const addBook = async (req, res, next) => {
     try {
@@ -154,7 +154,6 @@ const addLibrarian = async (req, res, next) => {
             });
         } else {
             // Generate a random password if not provided
-            console.log(password)
             const randomPassword = password || generateRandomPassword();
             const hashedPassword = await hashPassword(randomPassword);
 
@@ -174,6 +173,8 @@ const addLibrarian = async (req, res, next) => {
             logger.info(`Generated password for new librarian: ${randomPassword}`);
         }
         delete user.password;
+
+        await mailer.sendLibrarianAddedEmail(user.email, user.name);
 
         logger.info(`[/admin/addLibrarian] - success - ${user.email}`);
         return res.status(200).json({
