@@ -63,6 +63,8 @@ const addBook = async (req, res, next) => {
                         publisher: bookData.publisher,
                         quantity: quantity || 1,
                         current_quantity: quantity || 1,
+                        description: bookData.description,
+                        cover: bookData.cover,
                         categories: {
                             connect: categoryResults.map(category => ({ sys_id: category.sys_id }))
                         },

@@ -52,6 +52,8 @@ model Books {
   publisher        String @default("")
   quantity         Int
   current_quantity Int
+  description      String
+  cover            String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

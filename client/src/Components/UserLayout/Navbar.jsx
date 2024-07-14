@@ -2,16 +2,12 @@ import React from 'react'
 import books from '../../assets/Books.png'
 import bell from '../../assets/bell.png'
 
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Global from '../../Utils/Global';
 
 
-const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
-    const navigate = useNavigate();
-    const handlelogin = () => {
-        setIsLoggedIn(true)
-        console.log("logged in")
-        navigate('/home')
-    }
+const Navbar = () => {
+
     return (
         <div className='w-full'>
             {/* <nav className='w-full h-16 flex items-center border-b-[0.5px] border-color-black'>
@@ -33,13 +29,13 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                         <h1 className='text-2xl font-montserrat font-semibold'>Public Library</h1>
                     </div>
                     <div className='flex w-[50%] gap-x-6 h-full items-center justify-end mr-6'>
-                        {isLoggedIn ? (
+                        {Global.user ? (
                             <>
                                 <img src={bell} alt="" className='w-5 h-5' />
                                 <button className="inline-block p-3 w-24 cursor-pointer rounded-md bg-green-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-green-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 border-2 border-green-800 focus-visible:ring-offset-2 active:scale-95" >Signout</button>
                             </>
                         ) : (
-                            <button className="inline-block p-3 w-24 cursor-pointer rounded-md bg-red-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 border-2 border-red-800 focus-visible:ring-offset-2 active:scale-95" onClick={handlelogin}>Login</button>
+                            <Link to="/login" className="inline-block p-3 w-24 cursor-pointer rounded-md bg-red-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 border-2 border-red-800 focus-visible:ring-offset-2 active:scale-95" >Login</Link>
                         )}
                     </div>
                 </div>

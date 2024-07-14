@@ -17,6 +17,8 @@ const getBookByISBN = async (isbn) => {
         authors: book.authors ? book.authors : ['Unknown'],
         publisher: book.publisher || 'Unknown',
         categories: book.categories || [],
+        description: book.description || 'No description available',
+        cover: book.imageLinks ? book.imageLinks.thumbnail : 'https://via.placeholder.com/150',
     };
 };
 
@@ -36,6 +38,8 @@ const getBookByTitle = async (title) => {
             authors: book.authors ? book.authors : ['Unknown'],
             publisher: book.publisher || 'Unknown',
             categories: book.categories || [],
+            description: book.description || 'No description available',
+            cover: book.imageLinks ? book.imageLinks.thumbnail : 'https://via.placeholder.com/150',
         };
     });
 
