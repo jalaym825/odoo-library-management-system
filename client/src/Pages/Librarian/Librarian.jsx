@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Dashboard from './Dashboard';
 import Global from '../../Utils/Global';
 import IssueBook from './IssueBook';
+import ReturnBook from './ReturnBook';
 const Librarian = () => {
   const [activePage, setActivePage] = useState('profile');
   const [isbn, setIsbn] = useState('');
@@ -59,52 +60,7 @@ const Librarian = () => {
         );
       case 'return':
         return (
-          <div>
-            <h1 className="text-3xl font-bold mb-4">Return Books</h1>
-            <div className="mb-4">
-              <label className="block text-gray-700">Enter User Email:</label>
-              <input
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded"
-                placeholder="Enter Email"
-              />
-            </div>
-            <button
-              onClick={handleFetchDetails}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
-            >
-              Fetch Details
-            </button>
-            {borrowedBooks.length > 0 && (
-              <div className="mt-4">
-                <h2 className="text-xl font-semibold mb-2">Borrowed Books:</h2>
-                <table className="min-w-full bg-white border">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2 border">Book ID</th>
-                      <th className="px-4 py-2 border">Name of Book</th>
-                      <th className="px-4 py-2 border">Date of Issue</th>
-                      <th className="px-4 py-2 border">Date of Return</th>
-                      <th className="px-4 py-2 border">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {borrowedBooks.map((book, index) => (
-                      <tr key={index}>
-                        <td className="px-4 py-2 border">{book.bookId}</td>
-                        <td className="px-4 py-2 border">{book.name}</td>
-                        <td className="px-4 py-2 border">{book.issueDate}</td>
-                        <td className="px-4 py-2 border">{book.returnDate}</td>
-                        <td className="px-4 py-2 border">{book.status}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+          <ReturnBook />
         );
       default:
         return (
