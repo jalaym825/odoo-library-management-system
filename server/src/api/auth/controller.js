@@ -83,14 +83,14 @@ const login = async (req, res, next) => {
             logger.warn(`[/auth/login] - email not found`);
             logger.debug(`[/auth/login] - email: ${email}`);
             return res.status(400).json({
-                message: "Email not found",
+                message: "Invalid email or password",
             });
         }
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             logger.warn(`[/auth/login] - invalid password`);
             logger.debug(`[/auth/login] - email: ${email}`);
-            return next({ path: '/auth/login', status: 400, message: "Invalid password" })
+            return next({ path: '/auth/login', status: 400, message: "Invalid email or password" })
         }
         const token = jwt.sign({ id: user.sys_id }, process.env.JWT_SECRET, {
             expiresIn: "7d",

@@ -61,6 +61,32 @@ const searchBooks = async (req, res, next) => {
     }
 };
 
+const getBook = async (req, res, next) => {
+    try {
+        const { isbn } = req.params;
+
+        const book = await prisma.books.findUnique({
+            where: { isbn },
+            include: {
+                authors: true,
+                categories: true
+            }
+        });
+
+        if (!book) {
+            return next({ path: '/books/:isbn', statusCode: 404, message: "Book not found" });
+        }
+
+        res.status(200).json({
+            book,
+            message: "Book retrieved successfully"
+        });
+    } catch (error) {
+        next({ path: '/books/:isbn', statusCode: 500, message: error.message, extraData: error });
+    }
+}
+
 module.exports = {
-    searchBooks
+    searchBooks,
+    getBook
 };

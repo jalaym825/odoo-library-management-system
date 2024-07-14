@@ -1,6 +1,7 @@
 const logger = require('../../utils/Logger');
 const prisma = require('../../utils/PrismaClient');
-const { getBookByISBN } = require('../../utils/Helper');
+const { getBookByISBN, generateRandomPassword, hashPassword } = require('../../utils/Helper');
+const crypto = require('crypto');
 
 const addBook = async (req, res, next) => {
     try {
@@ -127,7 +128,118 @@ const deleteBook = async (req, res, next) => {
     }
 };
 
+const addLibrarian = async (req, res, next) => {
+    try {
+        const { email, password, name, avatar } = req.body;
+
+        // Check if a user with the given email already exists
+        let user = await prisma.users.findUnique({
+            where: { email }
+        });
+
+        if (user) {
+            // If the user exists, update their role to LIBRARIAN
+            const updatedPassword = password ? await hashPassword(password) : user.password;
+
+            user = await prisma.users.update({
+                where: { email },
+                data: {
+                    role: 'LIBRARIAN',
+                    name,
+                    avatar,
+                    password: updatedPassword, // Only update password if provided
+                    isPasswordSet: password ? true : user.isPasswordSet, // Update isPasswordSet if password is provided
+                    isVerified: true // Ensuring the user is verified
+                }
+            });
+        } else {
+            // Generate a random password if not provided
+            console.log(password)
+            const randomPassword = password || generateRandomPassword();
+            const hashedPassword = await hashPassword(randomPassword);
+
+            // Create a new user and librarian entry
+            user = await prisma.users.create({
+                data: {
+                    email,
+                    password: hashedPassword,
+                    role: 'LIBRARIAN',
+                    name,
+                    isPasswordSet: true,
+                    isVerified: true,
+                    avatar
+                }
+            });
+
+            logger.info(`Generated password for new librarian: ${randomPassword}`);
+        }
+        delete user.password;
+
+        logger.info(`[/admin/addLibrarian] - success - ${user.email}`);
+        return res.status(200).json({
+            librarian: user,
+            message: "Librarian added/updated successfully"
+        });
+
+    } catch (error) {
+        return next({ path: '/admin/addLibrarian', statusCode: 500, message: error.message, extraData: error });
+    }
+};
+
+// Edit an existing librarian
+const editLibrarian = async (req, res, next) => {
+    try {
+        const { userId, email, name, avatar } = req.body;
+
+        // Update the user details
+        const updatedUser = await prisma.users.update({
+            where: { sys_id: userId },
+            data: {
+                email,
+                name,
+                avatar
+            }
+        });
+
+        logger.info(`[/admin/editLibrarian] - success - ${updatedUser.email}`);
+        return res.status(200).json({
+            user: updatedUser,
+            message: "Librarian details updated successfully"
+        });
+
+    } catch (error) {
+        console.error('General Error:', error); // Debugging
+        return next({ path: '/admin/editLibrarian', statusCode: 500, message: error.message, extraData: error });
+    }
+};
+
+// Delete a librarian
+const deleteLibrarian = async (req, res, next) => {
+    try {
+        const { userId } = req.body;
+
+        // Optionally, delete the user or change their role
+        await prisma.users.update({
+            where: { sys_id: userId },
+            data: { role: 'USER' } // Changing role to USER
+        });
+
+        logger.info(`[/admin/deleteLibrarian] - success - ${userId}`);
+        return res.status(200).json({
+            message: "Librarian deleted successfully"
+        });
+
+    } catch (error) {
+        console.error('General Error:', error); // Debugging
+        return next({ path: '/admin/deleteLibrarian', statusCode: 500, message: error.message, extraData: error });
+    }
+};
+
+
 module.exports = {
     addBook,
-    deleteBook
+    deleteBook,
+    addLibrarian,
+    editLibrarian,
+    deleteLibrarian
 }
