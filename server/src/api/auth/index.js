@@ -6,6 +6,8 @@ const { validateSchema, verifyJWT } = require('../../utils/Middleware');
 const router = Router();
 
 router.get('/me', verifyJWT, controller.getUser);
+router.get('/google', controller.continueWithGoogle);
+router.get('/google/callback', controller.googleCallBack);
 
 router.post('/register', validateSchema(registerSchema), controller.register);
 router.post('/login', validateSchema(loginSchema), controller.login);

@@ -71,8 +71,16 @@ const verifyJWT = async (req, res, next) => {
     }
 }
 
+const isAdmin = async(req, res, next) => {
+    if (req.user.role !== 'ADMIN') {
+        return next({ path: "/middleware/isAdmin", statusCode: 403, message: "Unauthorized" })
+    }
+    next();
+}
+
 module.exports = {
     verifyJWT,
     validateSchema,
-    errorMiddleware
+    errorMiddleware,
+    isAdmin
 }

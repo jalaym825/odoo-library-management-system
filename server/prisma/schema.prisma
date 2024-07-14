@@ -26,6 +26,8 @@ model Users {
   role          Role    @default(USER)
   name          String
   isPasswordSet Boolean
+  isVerified    Boolean @default(false)
+  avatar        String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -40,4 +42,39 @@ model VerificationTokens {
   updatedAt DateTime @updatedAt
   expiresAt DateTime
   user      Users    @relation("verificationToken", fields: [userId], references: [sys_id])
+}
+
+model Books {
+  sys_id    String @id @default(cuid())
+  isbn      String @unique
+  title     String
+  publisher String @default("")
+  quantity  Int
+  current_quantity  Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categories Categories[] @relation("CategoryBooks")
+  authors    Authors[]    @relation("AuthorBooks")
+}
+
+model Categories {
+  sys_id String @id @default(cuid())
+  name   String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  books Books[] @relation("CategoryBooks")
+}
+
+model Authors {
+  sys_id String @id @default(cuid())
+  name   String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  books Books[] @relation("AuthorBooks")
 }
