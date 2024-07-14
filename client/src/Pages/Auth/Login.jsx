@@ -34,7 +34,8 @@ export const Login = () => {
         setLoading(true);
 
         try {
-            await Global.httpPost('/auth/login', { email, password });
+            const res = await Global.httpPost('/auth/login', { email, password });
+            Global.user = res.user;
             toast.success('Login successful');
             navigate("/")
         } catch (err) {

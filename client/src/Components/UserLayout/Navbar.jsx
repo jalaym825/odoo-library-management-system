@@ -1,12 +1,23 @@
 import React from 'react'
 import books from '../../assets/Books.png'
 import bell from '../../assets/bell.png'
+import { toast } from 'sonner';
 
 import { Link, useNavigate } from 'react-router-dom';
 import Global from '../../Utils/Global';
 
 
 const Navbar = () => {
+
+    const signOut = () => {
+        Global.httpPost('/auth/logout').then(() => {
+            Global.user = null;
+            window.location.reload();
+        }).catch(err => {
+            console.error(err);
+            toast.error('Failed to sign out');
+        })
+    }
 
     return (
         <div className='w-full'>
@@ -32,7 +43,7 @@ const Navbar = () => {
                         {Global.user ? (
                             <>
                                 <img src={bell} alt="" className='w-5 h-5' />
-                                <button className="inline-block p-3 w-24 cursor-pointer rounded-md bg-green-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-green-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 border-2 border-green-800 focus-visible:ring-offset-2 active:scale-95" >Signout</button>
+                                <button onClick={signOut} className="inline-block p-3 w-24 cursor-pointer rounded-md bg-green-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-green-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 border-2 border-green-800 focus-visible:ring-offset-2 active:scale-95" >Signout</button>
                             </>
                         ) : (
                             <Link to="/login" className="inline-block p-3 w-24 cursor-pointer rounded-md bg-red-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 border-2 border-red-800 focus-visible:ring-offset-2 active:scale-95" >Login</Link>
