@@ -37,7 +37,13 @@ export const Login = () => {
             const res = await Global.httpPost('/auth/login', { email, password });
             Global.user = res.user;
             toast.success('Login successful');
-            navigate("/")
+            if(Global.user.role === 'ADMIN') {
+                navigate('/admin-dashboard');
+            } else if(Global.user.role === 'LIBRARIAN') {
+                navigate('/librarian-dashboard');
+            } else {
+                navigate('/');
+            }
         } catch (err) {
             toast.error(err.message || 'Login failed');
         } finally {
