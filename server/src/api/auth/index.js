@@ -13,4 +13,6 @@ router.post('/register', validateSchema(registerSchema), controller.register);
 router.post('/login', validateSchema(loginSchema), controller.login);
 router.post('/logout', verifyJWT, controller.logout);
 
+router.put('/verify/:token', controller.verify);
+
 module.exports = router;

@@ -78,9 +78,17 @@ const isAdmin = async(req, res, next) => {
     next();
 }
 
+const isLibrarian = async(req, res, next) => {
+    if (req.user.role !== 'LIBRARIAN') {
+        return next({ path: "/middleware/isLibrarian", statusCode: 403, message: "Unauthorized" })
+    }
+    next();
+}
+
 module.exports = {
     verifyJWT,
     validateSchema,
     errorMiddleware,
-    isAdmin
+    isAdmin,
+    isLibrarian
 }

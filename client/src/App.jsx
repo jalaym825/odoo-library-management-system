@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -8,21 +8,35 @@ import { Login } from "./Pages/Auth/Login";
 // import Dashboard from "./Pages/Admin/Table";
 // import UserLayout from "./Components/Admin/UserLayout";
 import Admin from "./Pages/Admin/Admin";
-import Librarian from "./Pages/Librarian/Librarian";
-import Report from "./Pages/Report/Report";
+import LibrarianDashboard from './Pages/Librarian/Librarian'
 
 // import AdminPage from "./Pages/Admin/Navbar";
 
 function App() {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    (async () => {
+      try {
+        const user = await Global.getUser();
+        if (user) {
+          Global.user = user;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    })()
+  }, []);
+
   return (
     <>
       <Routes>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
       
-        <Route path="" element={<Admin />}/>
-        <Route path="/librarian" element={<Librarian/>}/>
-        <Route path="/report" element={<Report/>}/>
+        <Route path="/admin" element={<Admin />}/>
+        <Route path="/librarian" element={<LibrarianDashboard />}/>
 
       </Routes>
     </>

@@ -3,12 +3,16 @@ import Dashboard from './Dashboard';
 
 const Librarian = () => {
   const [activePage, setActivePage] = useState('profile');
+  const [isbn, setIsbn] = useState('profile');
   const [email, setEmail] = useState('');
   const [borrowedBooks, setBorrowedBooks] = useState([]);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
+  const handleIsbnChange = (event) => {
+    setIsbn(event.target.value);
+  }
 
   const handleFetchDetails = () => {
     // Simulated API call to fetch borrowed books based on email
