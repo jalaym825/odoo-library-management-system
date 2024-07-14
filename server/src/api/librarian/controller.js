@@ -138,9 +138,24 @@ const returnBook = async (req, res, next) => {
     }
 }
 
+const getIssuedBooks = async (req, res, next) => {
+    try {
+        const issuedBooks = await prisma.issuedBooks.findMany({
+            include: {
+                book: true,
+                user: true,
+            }
+        });
+        console.log(issuedBooks);
+        res.status(200).json(issuedBooks);
+    } catch (error) {
+        next({ path: '/librarian/issued-books', statusCode: 500, message: error.message, extraData: error });
+    }
+}
 
 
 module.exports = {
     issueBook,
-    returnBook
+    returnBook,
+    getIssuedBooks,
 };
