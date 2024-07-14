@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import Dashboard from './Dashboard';
-
+import Global from '../../Utils/Global';
+import IssueBook from './IssueBook';
 const Librarian = () => {
   const [activePage, setActivePage] = useState('profile');
-  const [isbn, setIsbn] = useState('profile');
+  const [isbn, setIsbn] = useState('');
   const [email, setEmail] = useState('');
   const [borrowedBooks, setBorrowedBooks] = useState([]);
+  const [bookDetails, setBookDetails] = useState(null); // State for book details
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
-  const handleIsbnChange = (event) => {
-    setIsbn(event.target.value);
-  }
+
 
   const handleFetchDetails = () => {
     // Simulated API call to fetch borrowed books based on email
@@ -24,6 +24,22 @@ const Librarian = () => {
     ];
 
     setBorrowedBooks(fetchedBooks);
+  };
+
+  const handleGetDetails = () => {
+    // Simulated API call to fetch book details based on ISBN
+    // Replace with actual API integration in your application
+    const fetchedBookDetails = {
+      bookId: '5521575',
+      name: 'Background to Indian Law',
+      author: 'Author Name',
+      publisher: 'Publisher Name',
+      year: '2020',
+      genre: 'Law',
+      availableCopies: 5,
+    };
+
+    setBookDetails(fetchedBookDetails);
   };
 
   const renderContent = () => {
@@ -39,37 +55,7 @@ const Librarian = () => {
         return <Dashboard />;
       case 'issue':
         return (
-          <div>
-            <h1 className="text-3xl font-bold mb-4">Issue Books</h1>
-            <div className="mb-4">
-              <label className="block text-gray-700">Enter Book ISBN:</label>
-              <input
-                type="text"
-                value={isbn}
-                onChange={handleIsbnChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded"
-                placeholder="Enter ISBN"
-              />
-            </div>
-            <button
-              onClick={handleGetDetails}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
-            >
-              Get Details
-            </button>
-            {bookDetails && (
-              <div className="mt-4">
-                <h2 className="text-xl font-semibold mb-2">Book Details:</h2>
-                <p><span className="font-semibold">Book ID:</span> {bookDetails.bookId}</p>
-                <p><span className="font-semibold">Name:</span> {bookDetails.name}</p>
-                <p><span className="font-semibold">Author:</span> {bookDetails.author}</p>
-                <p><span className="font-semibold">Publisher:</span> {bookDetails.publisher}</p>
-                <p><span className="font-semibold">Year:</span> {bookDetails.year}</p>
-                <p><span className="font-semibold">Genre:</span> {bookDetails.genre}</p>
-                <p><span className="font-semibold">Available Copies:</span> {bookDetails.availableCopies}</p>
-              </div>
-            )}
-          </div>
+          <IssueBook />
         );
       case 'return':
         return (
@@ -136,7 +122,7 @@ const Librarian = () => {
         <div className="flex items-center mb-6">
           <img className="h-12 w-12 rounded-full mr-4" src="https://via.placeholder.com/150" alt="Profile" />
           <div>
-            <h2 className="text-lg font-semibold">Librarian Name</h2>
+            <h2 className="text-lg font-semibold">{Global.user.name}</h2>
             <p className="text-sm text-gray-400">Online</p>
           </div>
         </div>
