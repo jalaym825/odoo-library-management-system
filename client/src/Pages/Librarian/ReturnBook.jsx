@@ -20,8 +20,8 @@ const ReturnBook = () => {
         setIsLoading(true);
         try {
             const response = await Global.httpGet(`/librarian/users-issued-books/${email}`);
-            console.log(response)
-            setBorrowedBooks(response);
+            console.log(response);
+            setBorrowedBooks(Array.isArray(response) ? response : [response]);
             if (response.length === 0) {
                 toast.info('No borrowed books found for this user');
             }
@@ -35,7 +35,7 @@ const ReturnBook = () => {
 
     const handleReturnBook = async (bookId) => {
         try {
-            await Global.httpPost('/librarian/return-book', { bookId });
+            await Global.httpPost('/librarian/return/' + bookId);
             toast.success('Book returned successfully');
             // Refresh the borrowed books list
             handleFetchDetails();
@@ -86,6 +86,8 @@ const ReturnBook = () => {
                                     <th className="px-4 py-2 border">Date of Issue</th>
                                     <th className="px-4 py-2 border">Due Date</th>
                                     <th className="px-4 py-2 border">Status</th>
+                                    <th className="px-4 py-2 border">Returned Date</th>
+                                    <th className="px-4 py-2 border">Fine</th>
                                     <th className="px-4 py-2 border">Action</th>
                                 </tr>
                             </thead>
@@ -97,8 +99,10 @@ const ReturnBook = () => {
                                         <td className="px-4 py-2 border">{formatDate(book.issuedAt)}</td>
                                         <td className="px-4 py-2 border">{formatDate(book.dueDate)}</td>
                                         <td className="px-4 py-2 border">{book.status}</td>
+                                        <td className="px-4 py-2 border">{book.returned ? formatDate(book.returned) : '-'}</td>
+                                        <td className="px-4 py-2 border">{book.fine}</td>
                                         <td className="px-4 py-2 border">
-                                            {book.status === 'issued' && (
+                                            {book.status !== 'issued' && (
                                                 <button
                                                     onClick={() => handleReturnBook(book.sys_id)}
                                                     className="bg-green-500 text-white py-1 px-2 rounded hover:bg-green-600"
