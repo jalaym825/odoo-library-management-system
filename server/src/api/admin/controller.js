@@ -3,6 +3,24 @@ const prisma = require('../../utils/PrismaClient');
 const { getBookByISBN, generateRandomPassword, hashPassword, getBookByTitle } = require('../../utils/Helper');
 const mailer = require('../../utils/Mailer');
 
+const getLibrarians = async (req, res, next) => {
+    try {
+        const librarians = await prisma.users.findMany({
+            where: { role: 'LIBRARIAN' }
+        });
+        
+        logger.info(`[/admin/getLibrarians] - success`);
+        return res.status(200).json({
+            librarians,
+            message: "Librarians retrieved successfully"
+        });
+
+    } catch (error) {
+        console.error('General Error:', error); // Debugging
+        return next({ path: '/admin/getLibrarians', statusCode: 500, message: error.message, extraData: error });
+    }
+};
+
 const addBook = async (req, res, next) => {
     try {
         const { isbn, quantity } = req.body;
@@ -96,7 +114,7 @@ const addBook = async (req, res, next) => {
 
 const deleteBook = async (req, res, next) => {
     try {
-        const { isbn } = req.body;
+        const { isbn } = req.params;
 
         // Check if the book exists
         const existingBook = await prisma.books.findUnique({
@@ -257,7 +275,7 @@ const searchIsbnBook = async (req, res, next) => {
 
         logger.info(`[/admin/searchIsbnBook] - success - ${query}`);
         return res.status(200).json({
-            book,
+            books: book,
             message: "Book found successfully"
         });
 
@@ -273,5 +291,6 @@ module.exports = {
     addLibrarian,
     editLibrarian,
     deleteLibrarian,
-    searchIsbnBook
+    searchIsbnBook,
+    getLibrarians
 }

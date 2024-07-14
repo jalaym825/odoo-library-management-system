@@ -1,6 +1,31 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const getBooks = async (req, res, next) => {
+    try {
+        // const { limit = 10, offset = 0 } = req.query;
+
+        const books = await prisma.books.findMany({
+            include: {
+                authors: true,
+                categories: true
+            },
+            // take: parseInt(limit),
+            // skip: parseInt(offset),
+        });
+
+        const totalCount = await prisma.books.count();
+
+        res.status(200).json({
+            books,
+            totalCount,
+            message: "Books retrieved successfully"
+        });
+    } catch (error) {
+        next({ path: '/books', statusCode: 500, message: error.message, extraData: error });
+    }
+}
+
 const searchBooks = async (req, res, next) => {
     try {
         const { query, filter, limit = 10, offset = 0 } = req.query;
@@ -88,5 +113,6 @@ const getBook = async (req, res, next) => {
 
 module.exports = {
     searchBooks,
-    getBook
+    getBook,
+    getBooks
 };

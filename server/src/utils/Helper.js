@@ -31,15 +31,15 @@ const getBookByTitle = async (title) => {
         return null;
     }
 
-    const books = data.items;
-    books.map(book => {
+    let books = data.items;
+    books = books.map(book => {
         return {
-            title: book.title,
-            authors: book.authors ? book.authors : ['Unknown'],
-            publisher: book.publisher || 'Unknown',
-            categories: book.categories || [],
-            description: book.description || 'No description available',
-            cover: book.imageLinks ? book.imageLinks.thumbnail : 'https://via.placeholder.com/150',
+            title: book.volumeInfo.title,
+            authors: book.volumeInfo.authors ? book.volumeInfo.authors : ['Unknown'],
+            publisher: book.volumeInfo.publisher || 'Unknown',
+            categories: book.volumeInfo.categories || [],
+            description: book.volumeInfo.description || 'No description available',
+            cover: book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/150',
         };
     });
 
