@@ -9,6 +9,7 @@ import { Login } from "./Pages/Auth/Login";
 // import UserLayout from "./Components/Admin/UserLayout";
 import Admin from "./Pages/Admin/Admin";
 import Librarian from "./Pages/Librarian/Librarian";
+import Report from "./Pages/Report/Report";
 
 // import AdminPage from "./Pages/Admin/Navbar";
 
@@ -21,6 +22,7 @@ function App() {
       
         <Route path="" element={<Admin />}/>
         <Route path="/librarian" element={<Librarian/>}/>
+        <Route path="/report" element={<Report/>}/>
 
       </Routes>
     </>
