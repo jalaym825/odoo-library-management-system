@@ -1,6 +1,6 @@
 const logger = require('../../utils/Logger');
 const prisma = require('../../utils/PrismaClient');
-const { getBookByISBN, generateRandomPassword, hashPassword } = require('../../utils/Helper');
+const { getBookByISBN, generateRandomPassword, hashPassword, getBookByTitle } = require('../../utils/Helper');
 const mailer = require('../../utils/Mailer');
 
 const addBook = async (req, res, next) => {
@@ -236,11 +236,40 @@ const deleteLibrarian = async (req, res, next) => {
     }
 };
 
+const searchIsbnBook = async (req, res, next) => {
+    try {
+        const { query } = req.params;
+
+        if(!query) {
+            return next({ path: '/admin/searchIsbnBook', statusCode: 400, message: "Query not provided" });
+        }
+        // search query from google books api
+
+        const book = await getBookByTitle(query);
+        
+        if (!book) {
+            logger.warn(`[/admin/searchIsbnBook] - book not found`);
+            logger.debug(`[/admin/searchIsbnBook] - query: ${query}`);
+            return next({ path: '/admin/searchIsbnBook', statusCode: 404, message: "Book not found" });
+        }
+
+        logger.info(`[/admin/searchIsbnBook] - success - ${query}`);
+        return res.status(200).json({
+            book,
+            message: "Book found successfully"
+        });
+
+    } catch (error) {
+        console.error('General Error:', error); // Debugging
+        return next({ path: '/admin/searchIsbnBook', statusCode: 500, message: error.message, extraData: error });
+    }
+}
 
 module.exports = {
     addBook,
     deleteBook,
     addLibrarian,
     editLibrarian,
-    deleteLibrarian
+    deleteLibrarian,
+    searchIsbnBook
 }

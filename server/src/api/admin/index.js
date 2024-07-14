@@ -11,4 +11,6 @@ router.delete('/books/:id', verifyJWT, isAdmin, controller.deleteBook);
 router.post('/librarians', verifyJWT, isAdmin, validateSchema(addLibrarianSchema), controller.addLibrarian);
 router.delete('/librarians', verifyJWT, isAdmin, validateSchema(deleteLibrarianSchema), controller.deleteLibrarian);
 
+router.get('/search-isbn-book/:query', verifyJWT, isAdmin, controller.searchIsbnBook);
+
 module.exports = router;

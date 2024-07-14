@@ -215,6 +215,60 @@ const googleCallBack = async (req, res, next) => {
     }
 };
 
+const verify = async (req, res, next) => {
+    try {
+        const { token } = req.params;
+        const verificationToken = await prisma.verificationTokens.findUnique({
+            where: {
+                token,
+            },
+        });
+
+        if (!verificationToken) {
+            logger.warn(`[/auth/verify] - token not found`);
+            logger.debug(`[/auth/verify] - token: ${token}`);
+            return next({ path: '/auth/verify', status: 400, message: "Invalid token" })
+        }
+        // match the token
+        if (verificationToken.token !== token) {
+            logger.warn(`[/auth/verify] - token mismatch`);
+            logger.debug(`[/auth/verify] - token: ${token}`);
+            return next({ path: '/auth/verify', status: 400, message: "Invalid token" })
+        }
+        if (verificationToken.expiration < new Date()) {
+            logger.warn(`[/auth/verify] - token expired`);
+            logger.debug(`[/auth/verify] - token: ${token}`);
+            return next({ path: '/auth/verify', status: 400, message: "Token expired" })
+        }
+        const user = await prisma.users.update({
+            where: {
+                sys_id: verificationToken.userId,
+            },
+            data: {
+                isVerified: true,
+            },
+        });
+        if (!user) {
+            logger.error(`[/auth/verify] - user not found`);
+            logger.debug(`[/auth/verify] - token: ${token}`);
+            return next({ path: '/auth/verify', status: 400, message: "User not found" })
+        }
+        // delete verification token
+        await prisma.verificationTokens.delete({
+            where: {
+                token,
+            },
+        });
+        logger.info(`[/auth/verify] - success - ${user.sys_id}`);
+        logger.debug(`[/auth/verify] - id: ${user.sys_id}`);
+        return res.status(200).json({
+            message: "Email verified successfully",
+        });
+    } catch (err) {
+        console.log(err)
+        next({ path: '/auth/verify', status: 400, message: err.message, extraData: err });
+    }
+}
 
 module.exports = {
     register,
@@ -222,5 +276,6 @@ module.exports = {
     getUser,
     logout,
     continueWithGoogle,
-    googleCallBack
+    googleCallBack,
+    verify
 }
