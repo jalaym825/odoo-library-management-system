@@ -1,6 +1,8 @@
 // src/LibrarianDashboard.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaTrash, FaEdit } from 'react-icons/fa';
+import Global from '../../Utils/Global';
+import { toast } from 'sonner';
 
 const LibrarianDashboard = () => {
   // Dummy data for initial librarians
@@ -15,6 +17,15 @@ const LibrarianDashboard = () => {
   const [librarians, setLibrarians] = useState(initialLibrarians);
   const [newLibrarianName, setNewLibrarianName] = useState('');
   const [newLibrarianEmail, setNewLibrarianEmail] = useState('');
+
+  useEffect(() => {
+    Global.httpGet('/admin/librarians').then((res) => {
+      setLibrarians(res.librarians);
+    }).catch((error) => {
+      toast.error('Failed to fetch librarians');
+      console.error('Error:', error);
+    })
+  }, [])
 
   const handleAddLibrarian = () => {
     // Generate a unique ID for the new librarian (assuming simple incremental ID)
@@ -69,24 +80,24 @@ const LibrarianDashboard = () => {
         <table className="min-w-full bg-white border">
           <thead>
             <tr>
-              <th className="px-4 py-2 border">Librarian ID</th>
+              {/* <th className="px-4 py-2 border">Librarian ID</th> */}
               <th className="px-4 py-2 border">Name</th>
               <th className="px-4 py-2 border">Email</th>
               <th className="px-4 py-2 border">Status</th>
-              <th className="px-4 py-2 border">Actions</th>
+              <th className="px-4 py-2 border">Delete</th>
             </tr>
           </thead>
           <tbody>
             {librarians.map((librarian, index) => (
               <tr key={index}>
-                <td className="px-4 py-2 border">{librarian.id}</td>
-                <td className="px-4 py-2 border">{librarian.name}</td>
-                <td className="px-4 py-2 border">{librarian.email}</td>
-                <td className="px-4 py-2 border">{librarian.status}</td>
-                <td className="px-4 py-2 border">
-                  <button className="text-blue-500 hover:text-blue-700">
+                {/* <td className="px-4 py-2 border">{librarian.sys_id}</td> */}
+                <td className="px-4 py-2 border text-center">{librarian.name}</td>
+                <td className="px-4 py-2 border text-center">{librarian.email}</td>
+                <td className="px-4 py-2 border text-center">{librarian.status}</td>
+                <td className="px-4 py-2 border text-center">
+                  {/* <button className="text-blue-500 hover:text-blue-700">
                     <FaEdit />
-                  </button>
+                  </button> */}
                   <button className="ml-2 text-red-500 hover:text-red-700">
                     <FaTrash />
                   </button>

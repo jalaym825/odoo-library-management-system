@@ -28,8 +28,8 @@ const Navbar = () => {
                         <h1 className='text-2xl font-montserrat font-semibold'>Public Library</h1>
                     </div>
                     <div className='flex w-[50%] gap-x-2 h-full items-center justify-end mr-6'>
-                        <button class="inline-block p-3 w-24 cursor-pointer rounded-md bg-green-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-green-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 border-2 border-green-800 focus-visible:ring-offset-2 active:scale-95">Home</button>
-                        <button class="inline-block p-3 w-24 cursor-pointer rounded-md bg-green-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-green-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 border-2 border-green-800 focus-visible:ring-offset-2 active:scale-95">Signout</button>
+                        <button className="inline-block p-3 w-24 cursor-pointer rounded-md bg-green-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-green-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 border-2 border-green-800 focus-visible:ring-offset-2 active:scale-95">Home</button>
+                        <button className="inline-block p-3 w-24 cursor-pointer rounded-md bg-green-400 text-center text-md font-semibold font-poppins text-white transition duration-200 ease-in-out hover:bg-green-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 border-2 border-green-800 focus-visible:ring-offset-2 active:scale-95">Signout</button>
                     </div>
                 </div>
             </nav> */}

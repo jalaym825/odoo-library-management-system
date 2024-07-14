@@ -33,6 +33,18 @@ export default class Global {
         }
     }
 
+    static async httpDelete(endPoint, params = {}) {
+        try {
+            const { data } = await this.axiosInstance.delete(endPoint, {
+                params,
+                headers: this.getHeaders(),
+            });
+            return data;
+        } catch (err) {
+            this.handleError(err);
+        }
+    }
+
     static async httpPost(endPoint, body, isFormData = false) {
         try {
             const { data } = await this.axiosInstance.post(endPoint, body, {

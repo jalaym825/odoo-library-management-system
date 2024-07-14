@@ -4,6 +4,8 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import Dashboard from './Dashboard';
 import AddBook from './AddBook';
 import LibrarianDashboard from './LibrarianDashboard'; // Import LibrarianDashboard component
+import Global from '../../Utils/Global';
+import SearchBook from './SearchBook';
 
 const Admin = () => {
   const [isBooksMenuOpen, setIsBooksMenuOpen] = useState(false);
@@ -15,6 +17,8 @@ const Admin = () => {
 
   const renderContent = () => {
     switch (activePage) {
+      case 'searchBook':
+        return <SearchBook />;
       case 'addBook':
         return <AddBook />;
       case 'dashboard':
@@ -48,7 +52,7 @@ const Admin = () => {
             alt="Profile"
           />
           <div>
-            <h2 className="text-lg font-semibold">John Dsouza</h2>
+            <h2 className="text-lg font-semibold">{Global.user.name}</h2>
             <p className="text-sm text-gray-400">Online</p>
           </div>
         </div>
@@ -65,7 +69,7 @@ const Admin = () => {
               Dashboard
             </button>
           </li>
-          <li className="mb-4">
+          {/* <li className="mb-4">
             <button
               onClick={() => setActivePage('profile')}
               className={`w-full text-left py-2 px-3 rounded ${
@@ -76,7 +80,7 @@ const Admin = () => {
             >
               My Profile
             </button>
-          </li>
+          </li> */}
           <li className="mb-4">
             <button
               className="w-full flex justify-between items-center text-left hover:bg-gray-700 py-2 px-3 rounded"
@@ -99,6 +103,7 @@ const Admin = () => {
                 </li>
                 <li>
                   <button
+                  onClick={() => setActivePage('searchBook')}
                     className={`w-full text-left hover:bg-gray-700 py-2 px-3 rounded ${
                       activePage === 'searchBook' ? 'bg-gray-700 text-white' : ''
                     }`}
