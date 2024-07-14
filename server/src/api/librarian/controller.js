@@ -153,9 +153,42 @@ const getIssuedBooks = async (req, res, next) => {
     }
 }
 
+const getUsersIssuedBooks = async (req, res, next) => {
+    try {
+        const { email } = req.params;
+
+        const user = await prisma.users.findUnique({
+            where: {
+                email,
+            }
+        });
+
+        if (!user) {
+            return next({ path: '/librarian/users-issued-books', statusCode: 404, message: "User not found" });
+        }
+
+        const issuedBooks = await prisma.issuedBooks.findMany({
+            where: {
+                user: {
+                    email,
+                }
+            },
+            include: {
+                book: true,
+                user: true,
+            }
+        });
+
+        res.status(200).json(issuedBooks);
+    } catch (error) {
+        next({ path: '/librarian/users-issued-books', statusCode: 500, message: error.message, extraData: error });
+    }
+}
+
 
 module.exports = {
     issueBook,
     returnBook,
     getIssuedBooks,
+    getUsersIssuedBooks,
 };

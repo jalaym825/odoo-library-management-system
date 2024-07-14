@@ -6,8 +6,9 @@ const { validateSchema, verifyJWT, isLibrarian } = require('../../utils/Middlewa
 const router = Router();
 
 router.post('/issue', verifyJWT, isLibrarian, validateSchema(issueBookSchema), controller.issueBook);
-router.delete('/return/:id', verifyJWT, isLibrarian, controller.returnBook);
+router.post('/return/:id', verifyJWT, isLibrarian, controller.returnBook);
 
 router.get('/issued-books', verifyJWT, isLibrarian, controller.getIssuedBooks);
+router.get('/users-issued-books/:email', verifyJWT, isLibrarian, controller.getUsersIssuedBooks);
 
 module.exports = router;
